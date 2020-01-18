@@ -37,6 +37,7 @@ def bme280_node_run():
                 channel = connection.channel()
                 channel.basic_publish('',QUEUE,message,
                     pika.BasicProperties(content_type='text/json', delivery_mode=2))
+                connection.close()
             except pika.exceptions.AMQPConnectionError:
                 continue
 
