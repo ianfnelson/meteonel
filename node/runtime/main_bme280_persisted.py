@@ -14,7 +14,7 @@ def bme280_node_run():
 
         while True:
 
-            humidity, pressure, temperature = bme280_sensor.read_all()
+            humidity, pressure, temperature = sensor_bme280.read_all()
 
             data = {}
             data['device'] = DEVICE_ID
@@ -25,11 +25,10 @@ def bme280_node_run():
 
             json_data = json.dumps(data)
 
-            # Send the message.
-            print( "Sending message: %s" % message.get_string() )
+            print( "Sending message: %s" % json_data )
 
     except KeyboardInterrupt:
-        print ( "IoTHubClient sample stopped" )
+        print ( "Stopped." )
 
 if __name__ == '__main__':
-    weather_node_run()
+    bme280_node_run()
