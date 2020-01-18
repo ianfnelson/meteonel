@@ -40,7 +40,7 @@ def bme280_node_run():
                     channel.basic_publish('',QUEUE,message,
                     pika.BasicProperties(content_type='text/json', delivery_mode=2))
 
-                except KeyboardInterrupt
+                except KeyboardInterrupt:
                     connection.close()
                     break
 
@@ -48,7 +48,7 @@ def bme280_node_run():
                     continue
                 break
 
-        except pika.exceptions.ConnectionClosedByBroker
+        except pika.exceptions.ConnectionClosedByBroker:
             continue
         except pika.exceptions.AMQPChannelError as err:
             print("Caught a channel error: {}, stopping...".format(err))
