@@ -20,42 +20,29 @@ def bme280_node_run():
 
     while True:
         try:
-            connection = pika.BlockingConnection(all_nodes)
-            channel = connection.channel()
+            time.sleep(60 - time.time() % 60)
+            humidity, pressure, temperature = sensor_bme280.read_all()
 
-            while True:
-                try:
-                    time.sleep(60 - time.time() % 60)
-                    humidity, pressure, temperature = sensor_bme280.read_all()
+            data = {}
+            data['device'] = DEVICE_ID
+            data['timestamp'] = datetime.datetime.utcnow().isoformat() + 'Z'
+            data['tempAmbient'] = temperature
+            data['humidity'] = humidity
+            data['pressure'] = pressure
 
-                    data = {}
-                    data['device'] = DEVICE_ID
-                    data['timestamp'] = datetime.datetime.utcnow().isoformat() + 'Z'
-                    data['tempAmbient'] = temperature
-                    data['humidity'] = humidity
-                    data['pressure'] = pressure
+            message = json.dumps(data)
 
-                    message = json.dumps(data)
-
-                    channel.basic_publish('',QUEUE,message,
+            try:
+                connection = pika.BlockingConnection(all_nodes)
+                channel = connection.channel()
+                channel.basic_publish('',QUEUE,message,
                     pika.BasicProperties(content_type='text/json', delivery_mode=2))
+            except pika.exceptions.AMQPConnectionError:
+                continue
 
-                except KeyboardInterrupt:
-                    connection.close()
-                    break
-
-                else:
-                    continue
-                break
-
-        except pika.exceptions.ConnectionClosedByBroker:
-            continue
-        except pika.exceptions.AMQPChannelError as err:
-            print("Caught a channel error: {}, stopping...".format(err))
+        except KeyboardInterrupt:
+            connection.close()
             break
-        except pika.exceptions.AMQPConnectionError:
-            print("Connection was closed, retrying...")
-            continue
 
 if __name__ == '__main__':
     bme280_node_run()
