@@ -6,7 +6,7 @@ import pika
 import sensor_bme280
 
 DEVICE_ID = "leekpi"
-VHOST = "meteonel_dev"
+VHOST = "meteonel"
 QUEUE = "bme280_persisted"
 CREDENTIALS = "meteonel:7Z*0f4QRHOuO"
 
