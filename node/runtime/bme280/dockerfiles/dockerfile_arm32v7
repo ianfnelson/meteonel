@@ -1,0 +1,9 @@
+FROM arm32v7/python:3.8-alpine
+RUN python3 -m pip install --upgrade pip
+RUN pip3 install RPi.bme280
+RUN pip3 install smbus2
+RUN pip3 install pika
+
+COPY . .
+
+CMD [ "python", "./main.py" ]
