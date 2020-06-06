@@ -1,0 +1,1 @@
+sudo docker run --priviliged -d --it --restart unless-stopped -e METEONEL_DEVICE_ID=**DEVICEID** --name bme280 bme280
