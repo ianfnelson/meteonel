@@ -2,10 +2,11 @@ import datetime
 import time
 import sys
 import json
+import os
 import pika
 import sensor_bme280
 
-DEVICE_ID = "steakpi"
+DEVICE_ID = os.environ.get('METEONEL_DEVICE_ID')
 VHOST = "meteonel"
 QUEUE = "bme280_persisted"
 CREDENTIALS = "meteonel:7Z*0f4QRHOuO"
