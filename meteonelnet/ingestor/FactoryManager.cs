@@ -12,7 +12,7 @@ namespace Meteonel.Ingestor
 
         public FactoryManager()
         {
-            const string connectionString = "Server=192.168.1.97; Port=3306; Database=meteonel; Uid=meteonel_user; Pwd=cx4D&@0F#0";
+            const string connectionString = "Server=mdbneuinsl.mariadb.database.azure.com; Port=3306; Database=meteonel; Uid=meteonel_user@mdbneuinsl; Pwd=o1ZO73&jc4Rp";
 
             Instance = Fluently.Configure()
                 .Database((MySQLConfiguration.Standard).ConnectionString(connectionString))
