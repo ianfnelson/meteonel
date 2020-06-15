@@ -1,16 +1,9 @@
-using System;
 using J = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 
-namespace Meteonel.Ingestor
+namespace Meteonel.Ingestor.Messages
 {
-    public class Bme280Message
+    public class Bme280Message : Message
     {
-        [J("device")]
-        public string Device { get; set; }
-        
-        [J("timestamp")]
-        public DateTime Timestamp { get; set; }
-        
         [J("tempAmbient")]
         public decimal TempAmbient { get; set; }
         

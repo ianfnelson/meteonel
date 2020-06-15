@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
 using System.Threading;
-using Meteonel.Ingestor.DomainModel;
+using Meteonel.Ingestor.Ingestors;
 using NHibernate;
 using RabbitMQ.Client;
-using RabbitMQ.Client.Events;
 
 namespace Meteonel.Ingestor
 {
@@ -18,8 +13,6 @@ namespace Meteonel.Ingestor
         
         static void Main(string[] args)
         {
-            var devices = GetDevices();
-
             var factory = new ConnectionFactory
             {
                 HostName="192.168.1.97",
@@ -32,49 +25,22 @@ namespace Meteonel.Ingestor
             {
                 using (var channel = connection.CreateModel())
                 {
-                    channel.QueueDeclare(queue: "bme280_persisted",
-                        durable: true,
-                        exclusive: false,
-                        autoDelete: false,
-                        arguments: new Dictionary<string, object>() {{"x-queue-type", "quorum"}});
+                    var bme280Ingestor = new Bme280Ingestor(_sessionFactory);
+                    bme280Ingestor.Ingest(channel);
                     
-                    var consumer = new EventingBasicConsumer(channel);
-                    consumer.Received += (model, ea) =>
-                    {
-                        var body = ea.Body;
-                        var message = Encoding.UTF8.GetString(body);
-                        var bme280Message = JsonSerializer.Deserialize<Bme280Message>(message);
-
-                        var bme280Reading = new Bme280Reading
-                        {
-                            Device = devices.Single(x => x.Name == bme280Message.Device),
-                            TimeStamp = bme280Message.Timestamp,
-                            Humidity = bme280Message.Humidity,
-                            Pressure = bme280Message.Pressure,
-                            TempAmbient = bme280Message.TempAmbient
-                        };
-
-                        using (var session = _sessionFactory.OpenSession())
-                        {
-                            try
-                            {
-                                session.Save(bme280Reading);
-                                session.Flush();
-                            }
-                            catch (Exception e)
-                            {
-                                Console.WriteLine(e);
-                            }
-                            finally
-                            {
-                                channel.BasicAck(ea.DeliveryTag, false);
-                            }
-                        }
-                    };
-
-                    channel.BasicConsume(queue: "bme280_persisted", autoAck: false, consumer: consumer);
+                    var ds18b20Ingestor = new Ds18B20Ingestor(_sessionFactory);
+                    ds18b20Ingestor.Ingest(channel);
                     
-                    Console.CancelKeyPress += new ConsoleCancelEventHandler(OnExit);
+                    var chargeIngestor = new ChargeIngestor(_sessionFactory);
+                    chargeIngestor.Ingest(channel);
+                    
+                    var rainTipIngestor = new RainTipIngestor(_sessionFactory);
+                    rainTipIngestor.Ingest(channel);
+                    
+                    var windIngestor = new WindIngestor(_sessionFactory);
+                    windIngestor.Ingest(channel);
+
+                    Console.CancelKeyPress += OnExit;
                     _closing.WaitOne();
                 }
             }
@@ -84,15 +50,6 @@ namespace Meteonel.Ingestor
         {
             Console.WriteLine("Exit");
             _closing.Set();
-        }
-
-        public static IList<Device> GetDevices()
-        {
-            using (var session = _sessionFactory.OpenSession())
-            {
-                var devices = session.Query<Device>().ToList();
-                return devices;
-            }
         }
     }
 }
