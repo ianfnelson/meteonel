@@ -36,7 +36,7 @@ class DS18B20(object):
             equal_pos = temp_line.find("t=")            
             if equal_pos != -1:
                 temp_string = temp_line[equal_pos+2:]
-                temp_c = float(temp_string)/1000.0
+                temp_c = round(float(temp_string)/1000.0,2)
         
         return temp_c
 
