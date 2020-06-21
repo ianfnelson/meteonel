@@ -1,5 +1,7 @@
 FROM iannelson.azurecr.io/stretch-base
 
 RUN apt-get -y install pijuice-base
-    
+
+COPY . .
+
 CMD [ "python3", "./main.py" ]
