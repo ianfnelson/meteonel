@@ -1,6 +1,4 @@
-FROM arm32v6/python:3.8-alpine
-RUN python3 -m pip install --upgrade pip
-RUN pip3 install pika
+FROM iannelson.azurecr.io/alpine-base-v6
 
 COPY . .
 
