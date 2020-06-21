@@ -12,6 +12,6 @@ namespace Meteonel.Ingestor.Ingestors
 
     public interface IIngestor
     {
-        void Ingest(IModel channel);
+        void Ingest(IConnection connection);
     }
 }

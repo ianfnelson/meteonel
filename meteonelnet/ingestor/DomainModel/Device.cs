@@ -1,6 +1,6 @@
 namespace Meteonel.Ingestor.DomainModel
 {
-    public class Device
+    public class Device : IEntity
     {
         public virtual int Id { get; set; }
         
