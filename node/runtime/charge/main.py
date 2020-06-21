@@ -27,6 +27,7 @@ def charge_node_run():
 
             data = {}
             data['device'] = DEVICE_ID
+            data['timestamp' = datetime.datetime.utcnow().isoformat() + 'Z'
             data['status'] = status
             data['power'] = power
             data['charge'] = charge
