@@ -15,19 +15,21 @@ namespace Meteonel.Ingestor.Ingestors
         where TMessage : IMessage
         where TReading : IReading
     {
-        private readonly ISessionFactory _sessionFactory;
+        protected readonly ISessionFactory SessionFactory;
         private static IList<Device> _devices;
 
         protected TemplateIngestor(ISessionFactory sessionFactory)
         {
-            _sessionFactory = sessionFactory;
+            SessionFactory = sessionFactory;
             _devices = GetDevices();
         }
 
         protected abstract string QueueName { get; }
         
-        public void Ingest(IModel channel)
+        public void Ingest(IConnection connection)
         {
+            var channel = connection.CreateModel();
+                
             channel.QueueDeclare(QueueName,
                 true,
                 false,
@@ -44,7 +46,7 @@ namespace Meteonel.Ingestor.Ingestors
 
                 var reading = Map(message);
 
-                using (var session = _sessionFactory.OpenSession())
+                using (var session = SessionFactory.OpenSession())
                 {
                     try
                     {
@@ -74,7 +76,7 @@ namespace Meteonel.Ingestor.Ingestors
 
         private IList<Device> GetDevices()
         {
-            using var session = _sessionFactory.OpenSession();
+            using var session = SessionFactory.OpenStatelessSession();
             
             var devices = session.Query<Device>().ToList();
             return devices;

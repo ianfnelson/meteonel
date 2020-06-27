@@ -23,26 +23,20 @@ namespace Meteonel.Ingestor
 
             using (var connection = factory.CreateConnection())
             {
-                using (var channel = connection.CreateModel())
-                {
-                    var bme280Ingestor = new Bme280Ingestor(_sessionFactory);
-                    bme280Ingestor.Ingest(channel);
-                    
-                    var ds18b20Ingestor = new Ds18B20Ingestor(_sessionFactory);
-                    ds18b20Ingestor.Ingest(channel);
-                    
-                    var chargeIngestor = new ChargeIngestor(_sessionFactory);
-                    chargeIngestor.Ingest(channel);
-                    
-                    var rainTipIngestor = new RainTipIngestor(_sessionFactory);
-                    rainTipIngestor.Ingest(channel);
-                    
-                    var windIngestor = new WindIngestor(_sessionFactory);
-                    windIngestor.Ingest(channel);
+                var chargeIngestor = new ChargeIngestor(_sessionFactory);
+                var rainTipIngestor = new RainTipIngestor(_sessionFactory);
+                var windIngestor = new WindIngestor(_sessionFactory);
+                var ds18b20Ingestor = new Ds18B20Ingestor(_sessionFactory);
+                var bme280Ingestor = new Bme280Ingestor(_sessionFactory);
+                
+                chargeIngestor.Ingest(connection);
+                rainTipIngestor.Ingest(connection);
+                windIngestor.Ingest(connection);
+                ds18b20Ingestor.Ingest(connection);
+                bme280Ingestor.Ingest(connection);
 
-                    Console.CancelKeyPress += OnExit;
-                    _closing.WaitOne();
-                }
+                Console.CancelKeyPress += OnExit;
+                _closing.WaitOne();
             }
         }
 
