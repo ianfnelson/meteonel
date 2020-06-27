@@ -24,7 +24,7 @@ def wind_run():
         try:
             time.sleep(120 - time.time() % 120)
 
-            windspeed, windgust, winddirection = sensor_wind.getreadings(110, 10)
+            windspeed, windgust, winddirection = sensor_wind.getreadings(117, 13)
 
             data = {}
             data['device'] = DEVICE_ID

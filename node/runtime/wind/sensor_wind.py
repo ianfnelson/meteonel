@@ -55,6 +55,13 @@ def reset_wind_count():
     global wind_count
     wind_count = 0
 
+def reset_all():
+    global store_speeds
+    global store_directions
+    reset_wind_count()
+    store_speeds = []
+    store_directions = []
+
 def spin():
     global wind_count
     wind_count = wind_count + 1
@@ -62,6 +69,7 @@ def spin():
 wind_speed_sensor.when_pressed = spin
 
 def getreadings(mean_interval, gust_interval):
+    reset_all()
     mean_start_time = time.time()
     while time.time() - mean_start_time <= mean_interval:
         gust_start_time = time.time()
@@ -70,11 +78,15 @@ def getreadings(mean_interval, gust_interval):
             voltage = round(adc.value*3.3,1)
             if voltage in volts:
                 store_directions.append(volts[voltage])
-            store_speeds.append(1.492 * wind_count / gust_interval)
+                print(volts[voltage])
+            speed = 1.492 * wind_count / gust_interval
+            print (speed)
+            store_speeds.append(speed)
             reset_wind_count()
     wind_speed = statistics.mean(store_speeds)
     wind_gust = max(store_speeds)
     wind_direction = get_average_angle(store_directions)
+    print (wind_speed, wind_gust, wind_direction)
     return round(wind_speed,2), round(wind_gust,2), round(wind_direction,0)
 
 if __name__ == "__main__":
