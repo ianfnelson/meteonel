@@ -50,12 +50,22 @@ namespace Meteonel.Aggregator.Aggregators
                     return;
                 }
 
+                if (!ShouldAggregateForPeriod(aggregation))
+                {
+                    return;
+                }
+
                 var minimumDateTime = DateTime.UtcNow.AddDays(-aggregationPeriod.PeriodDays);
                 UpdateAggregation(session, aggregation, minimumDateTime);
                 aggregation.CalculationTimestamp = DateTime.UtcNow;
                 session.SaveOrUpdate(aggregation);
                 session.Flush();
             }
+        }
+
+        protected virtual bool ShouldAggregateForPeriod(TAggregation aggregation)
+        {
+            return true;
         }
 
         protected abstract void UpdateAggregation(ISession session, TAggregation aggregation, DateTime minimumDateTime);

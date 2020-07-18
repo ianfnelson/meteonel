@@ -5,7 +5,7 @@ namespace Meteonel.Ingestor.Messages
     public class ChargeMessage : Message
     {
         [JsonPropertyName("charge")]
-        public decimal Charge { get; set; }
+        public int Charge { get; set; }
         
         [JsonPropertyName("temperature")]
         public int Temperature { get; set; }

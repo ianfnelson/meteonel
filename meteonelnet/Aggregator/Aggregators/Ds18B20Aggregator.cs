@@ -38,6 +38,17 @@ namespace Meteonel.Aggregator.Aggregators
                 .Add(Restrictions.Ge("Timestamp", minimumDateTime))
                 .SetProjection(Projections.Avg("TempGround"))
                 .FutureValue<double>();
+
+            var minimumTemp = futureMinimumTemp.ToList().Single();
+            var maximumTemp = futureMaximumTemp.ToList().Single();
+
+            aggregation.TempGroundAverage = Convert.ToDecimal(futureAverageTemp.Value);
+
+            aggregation.TempGroundMinimum = minimumTemp.TempGround;
+            aggregation.TempGroundMinimumTimestamp = minimumTemp.Timestamp;
+
+            aggregation.TempGroundMaximum = maximumTemp.TempGround;
+            aggregation.TempGroundMaximumTimestamp = maximumTemp.Timestamp;
         }
     }
 }

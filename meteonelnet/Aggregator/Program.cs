@@ -32,10 +32,14 @@ namespace Aggregator
             using (var connection = factory.CreateConnection())
             {
                 var bme280Aggregator = new Bme280Aggregator(_sessionFactory);
+                var ds18B20Aggregator = new Ds18B20Aggregator(_sessionFactory);
+                var chargeAggregator = new ChargeAggregator(_sessionFactory);
 
                 var aggregators = new List<IAggregator>
                 {
-                    bme280Aggregator
+                    bme280Aggregator,
+                    ds18B20Aggregator,
+                    chargeAggregator
                 };
 
                 var incomingChannel = connection.CreateModel();

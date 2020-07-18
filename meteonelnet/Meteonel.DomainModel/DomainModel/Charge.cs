@@ -1,8 +1,10 @@
+using System;
+
 namespace Meteonel.DomainModel
 {
     public class ChargeLatest : Reading, IChargeReading
     {
-        public virtual decimal Charge { get; set; }
+        public virtual int Charge { get; set; }
         public virtual int Temperature { get; set; }
         public virtual ChargePower Power { get; set; }
         public virtual ChargeStatus Status { get; set; }
@@ -10,10 +12,19 @@ namespace Meteonel.DomainModel
 
     public class ChargeReading : Reading, IChargeReading
     {
-        public virtual decimal Charge { get; set; }
+        public virtual int Charge { get; set; }
         public virtual int Temperature { get; set; }
         public virtual ChargePower Power { get; set; }
         public virtual ChargeStatus Status { get; set; }
+    }
+
+    public class ChargeAggregation : Aggregation
+    {
+        public virtual int ChargeMaximum { get; set; }
+        public virtual DateTime ChargeMaximumTimestamp { get; set; }
+        public virtual int ChargeMinimum { get; set; }
+        public virtual DateTime ChargeMinimumTimestamp { get; set; }
+        public virtual decimal ChargeAverage { get; set; }
     }
 
     public class ChargePower : ReferenceData
@@ -26,7 +37,7 @@ namespace Meteonel.DomainModel
 
     public interface IChargeReading : IReading
     {
-        decimal Charge { get; set; }
+        int Charge { get; set; }
         int Temperature { get; set; }
         ChargePower Power { get; set; }
         ChargeStatus Status { get; set; }
