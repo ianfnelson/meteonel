@@ -52,5 +52,10 @@ namespace Meteonel.Aggregator.Aggregators
             aggregation.ChargeMaximum = maximumCharge.Charge;
             aggregation.ChargeMaximumTimestamp = maximumCharge.Timestamp;
         }
+
+        protected override bool ShouldAggregateForPeriod(ChargeAggregation aggregation)
+        {
+            return new[] {"24H", "7D"}.Contains(aggregation.Period.Code);
+        }
     }
 }
