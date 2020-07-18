@@ -1,28 +1,32 @@
-using Meteonel.Ingestor.DomainModel;
+using Meteonel.DomainModel;
 using Meteonel.Ingestor.Messages;
 using NHibernate;
 
 namespace Meteonel.Ingestor.Ingestors
 {
-    public class Bme280Ingestor : TemplateIngestor<Bme280Message, Bme280Reading>
+    public class Bme280Ingestor : TemplateIngestor<Bme280Message, Bme280Reading, Bme280Latest>
     {
         public Bme280Ingestor(ISessionFactory sessionFactory) : base(sessionFactory)
         {
         }
 
         protected override string QueueName => "bme280_persisted";
-        
-        protected override Bme280Reading Map(Bme280Message message)
+
+        protected override void PopulateLatest(Bme280Message message, Bme280Latest latest)
         {
-            var reading = new Bme280Reading
-            {
-                Device = GetDevice(message.Device),
-                TimeStamp = message.Timestamp,
-                Humidity = message.Humidity,
-                Pressure = message.Pressure,
-                TempAmbient = message.TempAmbient
-            };
-            return reading;
+            Populate(message, latest);
+        }
+
+        protected override void PopulateReading(Bme280Message message, Bme280Reading reading)
+        {
+            Populate(message, reading);
+        }
+
+        private static void Populate(Bme280Message message, IBme280Reading destination)
+        {
+            destination.Humidity = message.Humidity;
+            destination.Pressure = message.Pressure;
+            destination.TempAmbient = message.TempAmbient;
         }
     }
 }

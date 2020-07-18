@@ -1,7 +1,7 @@
 using FluentNHibernate.Automapping;
 using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
-using Meteonel.Ingestor.DomainModel;
+using Meteonel.DomainModel;
 using NHibernate;
 
 namespace Meteonel.Ingestor
@@ -17,7 +17,7 @@ namespace Meteonel.Ingestor
             Instance = Fluently.Configure()
                 .Database((MySQLConfiguration.Standard).ConnectionString(connectionString))
                 .Mappings(m => m.AutoMappings.Add(
-                    AutoMap.AssemblyOf<Device>().Where(t => t.Namespace == "Meteonel.Ingestor.DomainModel")))
+                    AutoMap.AssemblyOf<Device>().Where(t => t.Namespace == "Meteonel.DomainModel")))
                 .BuildSessionFactory();
         }
     }

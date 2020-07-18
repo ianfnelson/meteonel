@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
-using Meteonel.Ingestor.DomainModel;
+using Meteonel.DomainModel;
 using Meteonel.Ingestor.Messages;
 using NHibernate;
 
 namespace Meteonel.Ingestor.Ingestors
 {
-    public class ChargeIngestor : TemplateIngestor<ChargeMessage, ChargeReading>
+    public class ChargeIngestor : TemplateIngestor<ChargeMessage, ChargeReading, ChargeLatest>
     {
         private static IList<ChargePower> _powers;
         private static IList<ChargeStatus> _statuses;
@@ -18,18 +18,23 @@ namespace Meteonel.Ingestor.Ingestors
 
         protected override string QueueName => "charge_persisted";
 
-        protected override ChargeReading Map(ChargeMessage message)
+        protected override void PopulateReading(ChargeMessage message, ChargeReading reading)
         {
-            var reading = new ChargeReading
-            {
-                Device = GetDevice(message.Device),
-                Power = GetPower(message.Power),
-                Status = GetStatus(message.Status),
-                Temperature = message.Temperature,
-                TimeStamp = message.Timestamp,
-                Charge = message.Charge
-            };
-            return reading;
+            Populate(message, reading);
+        }
+
+        protected override void PopulateLatest(ChargeMessage message, ChargeLatest latest)
+        {
+            Populate(message, latest);
+        }
+
+        private static void Populate(ChargeMessage message, IChargeReading destination)
+        {
+            destination.Power = GetPower(message.Power);
+            destination.Status = GetStatus(message.Status);
+            destination.Temperature = message.Temperature;
+            destination.Timestamp = message.Timestamp;
+            destination.Charge = message.Charge;
         }
 
         private static ChargeStatus GetStatus(string statusCode)

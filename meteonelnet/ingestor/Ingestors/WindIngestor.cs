@@ -1,27 +1,32 @@
-using Meteonel.Ingestor.DomainModel;
+using Meteonel.DomainModel;
 using Meteonel.Ingestor.Messages;
 using NHibernate;
 
 namespace Meteonel.Ingestor.Ingestors
 {
-    public class WindIngestor : TemplateIngestor<WindMessage, WindReading>
+    public class WindIngestor : TemplateIngestor<WindMessage, WindReading, WindLatest>
     {
         public WindIngestor(ISessionFactory sessionFactory) : base(sessionFactory)
         {
         }
 
         protected override string QueueName => "wind_persisted";
-        protected override WindReading Map(WindMessage message)
+        protected override void PopulateReading(WindMessage message, WindReading reading)
         {
-            var reading = new WindReading
-            {
-                Device = GetDevice(message.Device),
-                TimeStamp = message.Timestamp,
-                WindDirection = message.WindDirection,
-                WindGust = message.WindGust,
-                WindSpeed = message.WindSpeed
-            };
-            return reading;
+            Populate(message, reading);
+        }
+
+        protected override void PopulateLatest(WindMessage message, WindLatest latest)
+        {
+            Populate(message, latest);
+        }
+
+        private static void Populate(WindMessage message, IWindReading destination)
+        {
+            destination.Timestamp = message.Timestamp;
+            destination.WindDirection = message.WindDirection;
+            destination.WindGust = message.WindGust;
+            destination.WindSpeed = message.WindSpeed;
         }
     }
 }

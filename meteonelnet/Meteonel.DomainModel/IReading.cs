@@ -1,11 +1,11 @@
 using System;
 
-namespace Meteonel.Ingestor.DomainModel
+namespace Meteonel.DomainModel
 {
     public interface IReading : IEntity
     {
         Device Device { get; set; }
         
-        DateTime TimeStamp { get; set; }
+        DateTime Timestamp { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-namespace Meteonel.Ingestor.DomainModel
+namespace Meteonel.DomainModel
 {
     public abstract class ReferenceData : IReferenceData
     {

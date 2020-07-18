@@ -13,6 +13,8 @@ namespace Meteonel.Ingestor
         
         static void Main(string[] args)
         {
+            HibernatingRhinos.Profiler.Appender.NHibernate.NHibernateProfiler.Initialize();
+
             var factory = new ConnectionFactory
             {
                 HostName="192.168.1.97",

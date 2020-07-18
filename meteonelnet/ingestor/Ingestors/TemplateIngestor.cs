@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
-using Meteonel.Ingestor.DomainModel;
+using Meteonel.DomainModel;
 using Meteonel.Ingestor.Messages;
 using NHibernate;
 using RabbitMQ.Client;
@@ -11,9 +11,10 @@ using RabbitMQ.Client.Events;
 
 namespace Meteonel.Ingestor.Ingestors
 {
-    public abstract class TemplateIngestor<TMessage, TReading> : IIngestor<TMessage, TReading>
+    public abstract class TemplateIngestor<TMessage, TReading, TLatest> : IIngestor<TMessage, TReading, TLatest>
         where TMessage : IMessage
-        where TReading : IReading
+        where TReading : IReading, new()
+        where TLatest : IReading, new()
     {
         protected readonly ISessionFactory SessionFactory;
         private static IList<Device> _devices;
@@ -44,12 +45,23 @@ namespace Meteonel.Ingestor.Ingestors
                 var bodyString = Encoding.UTF8.GetString(bodyBytes);
                 var message = JsonSerializer.Deserialize<TMessage>(bodyString);
 
-                var reading = Map(message);
-
                 using (var session = SessionFactory.OpenSession())
                 {
                     try
                     {
+                        var device = GetDevice(message);
+
+                        var reading = new TReading();
+                        reading.Device = device;
+                        reading.Timestamp = message.Timestamp;
+                        PopulateReading(message, reading);
+
+                        var latest = GetOrCreateLatest(session, device);
+                        latest.Device = device;
+                        latest.Timestamp = message.Timestamp;
+                        PopulateLatest(message, latest);
+
+                        session.SaveOrUpdate(latest);
                         session.Save(reading);
                         session.Flush();
                     }
@@ -67,11 +79,15 @@ namespace Meteonel.Ingestor.Ingestors
             channel.BasicConsume(QueueName, false, consumer);
         }
 
-        protected abstract TReading Map(TMessage message);
-
-        protected Device GetDevice(string deviceName)
+        private static TLatest GetOrCreateLatest(ISession session, Device device)
         {
-            return _devices.Single(x => x.Name == deviceName);
+            var latest = session.Query<TLatest>().SingleOrDefault(x => x.Device.Id == device.Id);
+            return latest ?? new TLatest();
+        }
+
+        private static Device GetDevice(TMessage message)
+        {
+            return _devices.Single(x => x.Name == message.Device);
         }
 
         private IList<Device> GetDevices()
@@ -81,5 +97,8 @@ namespace Meteonel.Ingestor.Ingestors
             var devices = session.Query<Device>().ToList();
             return devices;
         }
+
+        protected abstract void PopulateReading(TMessage message, TReading reading);
+        protected abstract void PopulateLatest(TMessage message, TLatest latest);
     }
 }

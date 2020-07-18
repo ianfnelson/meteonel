@@ -11,7 +11,12 @@
     <ItemGroup>
       <PackageReference Include="FluentNHibernate" Version="2.1.2" />
       <PackageReference Include="MySql.Data" Version="8.0.19" />
+      <PackageReference Include="NHibernateProfiler.Appender" Version="5.0.5047" />
       <PackageReference Include="RabbitMQ.Client" Version="5.1.2" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Meteonel.DomainModel\Meteonel.DomainModel.csproj" />
     </ItemGroup>
 
 </Project>

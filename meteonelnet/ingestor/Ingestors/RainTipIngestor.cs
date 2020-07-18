@@ -1,25 +1,31 @@
-using Meteonel.Ingestor.DomainModel;
+using Meteonel.DomainModel;
 using Meteonel.Ingestor.Messages;
 using NHibernate;
 
 namespace Meteonel.Ingestor.Ingestors
 {
-    public class RainTipIngestor : TemplateIngestor<RainTipMessage, RainTipReading>
+    public class RainTipIngestor : TemplateIngestor<RainTipMessage, RainTipReading, RainTipLatest>
     {
         public RainTipIngestor(ISessionFactory sessionFactory) : base(sessionFactory)
         {
         }
 
         protected override string QueueName => "raintip_persisted";
-        protected override RainTipReading Map(RainTipMessage message)
+
+        protected override void PopulateReading(RainTipMessage message, RainTipReading reading)
         {
-            var reading = new RainTipReading
-            {
-                Device = GetDevice(message.Device),
-                TimeStamp = message.Timestamp,
-                Rain = message.Rain
-            };
-            return reading;
+            Populate(message, reading);
+        }
+
+        protected override void PopulateLatest(RainTipMessage message, RainTipLatest latest)
+        {
+            Populate(message, latest);
+        }
+
+        private static void Populate(RainTipMessage message, IRainTipReading destination)
+        {
+            destination.Timestamp = message.Timestamp;
+            destination.Rain = message.Rain;
         }
     }
 }
