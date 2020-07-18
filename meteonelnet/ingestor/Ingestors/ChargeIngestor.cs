@@ -17,6 +17,7 @@ namespace Meteonel.Ingestor.Ingestors
         }
 
         protected override string QueueName => "charge_persisted";
+        public override SensorType SensorType => SensorType.Charge;
 
         protected override void PopulateReading(ChargeMessage message, ChargeReading reading)
         {

@@ -13,6 +13,7 @@ namespace Meteonel.Ingestor.Ingestors
 
     public interface IIngestor
     {
+        SensorType SensorType { get; }
         void Ingest(IConnection connection);
     }
 }

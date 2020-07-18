@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ingestor", "Ingestor\Ingestor.csproj", "{732C0093-D09C-42D3-8225-F8A40B37511B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Meteonel.DomainModel", "Meteonel.DomainModel\Meteonel.DomainModel.csproj", "{EACE69F9-F7D7-4364-876F-8DEED4242B84}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Meteonel.Common", "Meteonel.DomainModel\Meteonel.Common.csproj", "{EACE69F9-F7D7-4364-876F-8DEED4242B84}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aggregator", "Aggregator\Aggregator.csproj", "{059FB40D-CD50-450C-980A-27B59C90BABB}"
 EndProject

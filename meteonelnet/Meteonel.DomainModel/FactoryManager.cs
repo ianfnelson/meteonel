@@ -4,7 +4,7 @@ using FluentNHibernate.Cfg.Db;
 using Meteonel.DomainModel;
 using NHibernate;
 
-namespace Meteonel.Ingestor
+namespace Meteonel
 {
     public class FactoryManager
     {

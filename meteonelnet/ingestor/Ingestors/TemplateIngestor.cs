@@ -26,18 +26,27 @@ namespace Meteonel.Ingestor.Ingestors
         }
 
         protected abstract string QueueName { get; }
-        
+
+        public abstract SensorType SensorType { get; }
+
         public void Ingest(IConnection connection)
         {
-            var channel = connection.CreateModel();
+            var incomingChannel = connection.CreateModel();
                 
-            channel.QueueDeclare(QueueName,
+            incomingChannel.QueueDeclare(QueueName,
                 true,
                 false,
                 false,
                 new Dictionary<string, object> {{"x-queue-type", "quorum"}});
-            
-            var consumer = new EventingBasicConsumer(channel);
+
+            var consumer = new EventingBasicConsumer(incomingChannel);
+
+            var outgoingChannel = connection.CreateModel();
+
+            outgoingChannel.QueueDeclare("aggregations",
+                true,
+                false,
+                false);
 
             consumer.Received += (model, ea) =>
             {
@@ -64,6 +73,20 @@ namespace Meteonel.Ingestor.Ingestors
                         session.SaveOrUpdate(latest);
                         session.Save(reading);
                         session.Flush();
+
+                        var aggregateMessage = new AggregationMessage
+                        {
+                            Device = message.Device, 
+                            SensorType = this.SensorType
+                        };
+
+                        var aggregateMessageJson = JsonSerializer.Serialize(aggregateMessage);
+                        var aggregateMessageBytes = System.Text.Encoding.UTF8.GetBytes(aggregateMessageJson);
+                        IBasicProperties props = outgoingChannel.CreateBasicProperties();
+                        props.ContentType = "text/plain";
+                        props.DeliveryMode = 2;
+                        outgoingChannel.BasicPublish("", "aggregations", props, aggregateMessageBytes);
+
                     }
                     catch (Exception e)
                     {
@@ -71,12 +94,12 @@ namespace Meteonel.Ingestor.Ingestors
                     }
                     finally
                     {
-                        channel.BasicAck(ea.DeliveryTag, false);
+                        incomingChannel.BasicAck(ea.DeliveryTag, false);
                     }
                 }
             };
 
-            channel.BasicConsume(QueueName, false, consumer);
+            incomingChannel.BasicConsume(QueueName, false, consumer);
         }
 
         private static TLatest GetOrCreateLatest(ISession session, Device device)

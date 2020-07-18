@@ -16,7 +16,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Meteonel.DomainModel\Meteonel.DomainModel.csproj" />
+      <ProjectReference Include="..\Meteonel.DomainModel\Meteonel.Common.csproj" />
     </ItemGroup>
 
 </Project>
