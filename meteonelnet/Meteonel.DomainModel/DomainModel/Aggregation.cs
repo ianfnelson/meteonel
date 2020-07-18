@@ -7,6 +7,6 @@ namespace Meteonel.DomainModel
         public virtual int Id { get; set; }
         public virtual Device Device { get; set; }
         public virtual AggregationPeriod Period { get; set; }
-        public virtual DateTime CalculationDateTime { get; set; }
+        public virtual DateTime CalculationTimestamp { get; set; }
     }
 }

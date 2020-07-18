@@ -8,6 +8,6 @@ namespace Meteonel.DomainModel
 
         AggregationPeriod Period { get; set; }
 
-        DateTime CalculationDateTime { get; set; }
+        DateTime CalculationTimestamp { get; set; }
     }
 }

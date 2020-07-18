@@ -3,6 +3,7 @@ using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
 using Meteonel.DomainModel;
 using NHibernate;
+using NHibernate.Dialect;
 
 namespace Meteonel
 {
@@ -15,7 +16,7 @@ namespace Meteonel
             const string connectionString = "Server=mdbneuinsl.mariadb.database.azure.com; Port=3306; Database=meteonel; Uid=meteonel_user@mdbneuinsl; Pwd=o1ZO73&jc4Rp";
 
             Instance = Fluently.Configure()
-                .Database((MySQLConfiguration.Standard).ConnectionString(connectionString))
+                .Database(MySQLConfiguration.Standard.Dialect<MySQL55Dialect>().ConnectionString(connectionString))
                 .Mappings(m => m.AutoMappings.Add(
                     AutoMap.AssemblyOf<Device>().Where(t => t.Namespace == "Meteonel.DomainModel")))
                 .BuildSessionFactory();

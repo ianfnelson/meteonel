@@ -1,3 +1,5 @@
+using System;
+
 namespace Meteonel.DomainModel
 {
     public class Bme280Latest : Reading, IBme280Reading
@@ -17,15 +19,21 @@ namespace Meteonel.DomainModel
     public class Bme280Aggregation : Aggregation
     {
         public virtual decimal TempAmbientMaximum { get; set; }
+        public virtual DateTime TempAmbientMaximumTimestamp { get; set; }
         public virtual decimal TempAmbientMinimum { get; set; }
+        public virtual DateTime TempAmbientMinimumTimestamp { get; set; }
         public virtual decimal TempAmbientAverage { get; set; }
 
         public virtual decimal HumidityMaximum { get; set; }
+        public virtual DateTime HumidityMaximumTimestamp { get; set; }
         public virtual decimal HumidityMinimum { get; set; }
+        public virtual DateTime HumidityMinimumTimestamp { get; set; }
         public virtual decimal HumidityAverage { get; set; }
 
         public virtual decimal PressureMaximum { get; set; }
+        public virtual DateTime PressureMaximumTimestamp { get; set; }
         public virtual decimal PressureMinimum { get; set; }
+        public virtual DateTime PressureMinimumTimestamp { get; set; }
         public virtual decimal PressureAverage { get; set; }
     }
 
