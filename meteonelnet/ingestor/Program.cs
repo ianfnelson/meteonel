@@ -13,7 +13,7 @@ namespace Meteonel.Ingestor
         
         static void Main(string[] args)
         {
-            HibernatingRhinos.Profiler.Appender.NHibernate.NHibernateProfiler.Initialize();
+            //HibernatingRhinos.Profiler.Appender.NHibernate.NHibernateProfiler.Initialize();
 
             var factory = new ConnectionFactory
             {

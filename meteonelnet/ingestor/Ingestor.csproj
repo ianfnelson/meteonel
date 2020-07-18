@@ -6,6 +6,7 @@
         <AssemblyName>Meteonel.Ingestor</AssemblyName>
         <RootNamespace>Meteonel.Ingestor</RootNamespace>
         <Company>Ian Nelson Systems Limited</Company>
+        <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
     </PropertyGroup>
 
     <ItemGroup>
