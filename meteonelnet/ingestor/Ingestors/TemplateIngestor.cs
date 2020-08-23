@@ -36,8 +36,7 @@ namespace Meteonel.Ingestor.Ingestors
             incomingChannel.QueueDeclare(QueueName,
                 true,
                 false,
-                false,
-                new Dictionary<string, object> {{"x-queue-type", "quorum"}});
+                false);
 
             var consumer = new EventingBasicConsumer(incomingChannel);
 

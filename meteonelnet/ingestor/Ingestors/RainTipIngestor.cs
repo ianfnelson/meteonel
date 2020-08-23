@@ -10,7 +10,7 @@ namespace Meteonel.Ingestor.Ingestors
         {
         }
 
-        protected override string QueueName => "raintip_persisted";
+        protected override string QueueName => "raintip";
         public override SensorType SensorType => SensorType.Rain;
 
         protected override void PopulateReading(RainTipMessage message, RainTipReading reading)
