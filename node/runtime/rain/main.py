@@ -8,15 +8,10 @@ import pika
 
 DEVICE_ID = os.environ.get('METEONEL_DEVICE_ID')
 VHOST = "meteonel"
-QUEUE = "raintip_persisted"
+QUEUE = "raintip"
 CREDENTIALS = "meteonel:7Z*0f4QRHOuO"
 
-node1 = pika.URLParameters('amqp://'+CREDENTIALS+'@nelsonnas/' + VHOST)
-node2 = pika.URLParameters('amqp://'+CREDENTIALS+'@steakpi/' + VHOST)
-node3 = pika.URLParameters('amqp://'+CREDENTIALS+'@minecraft/' + VHOST)
-node4 = pika.URLParameters('amqp://'+CREDENTIALS+'@leekpi/' + VHOST)
-node5 = pika.URLParameters('amqp://'+CREDENTIALS+'@pumpkinpi/' + VHOST)
-all_nodes = [node1, node2, node3, node4, node5]
+node = pika.URLParameters('amqp://'+CREDENTIALS+'@nelsonnas/' + VHOST)
 
 rain_sensor = Button(6)
 BUCKET_SIZE = 0.2794
@@ -29,7 +24,7 @@ def bucket_tipped():
 
     message = json.dumps(data)
 
-    connection = pika.BlockingConnection(all_nodes)
+    connection = pika.BlockingConnection(node)
     channel = connection.channel()
     channel.basic_publish('',QUEUE,message,
         pika.BasicProperties(content_type='text/json', delivery_mode=2))
