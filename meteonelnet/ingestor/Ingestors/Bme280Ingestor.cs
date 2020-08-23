@@ -10,7 +10,7 @@ namespace Meteonel.Ingestor.Ingestors
         {
         }
 
-        protected override string QueueName => "bme280_persisted";
+        protected override string QueueName => "bme280";
         public override SensorType SensorType => SensorType.Bme280;
 
         protected override void PopulateLatest(Bme280Message message, Bme280Latest latest)

@@ -10,7 +10,7 @@ namespace Meteonel.Ingestor.Ingestors
         {
         }
 
-        protected override string QueueName => "wind_persisted";
+        protected override string QueueName => "wind";
         public override SensorType SensorType => SensorType.Wind;
 
         protected override void PopulateReading(WindMessage message, WindReading reading)

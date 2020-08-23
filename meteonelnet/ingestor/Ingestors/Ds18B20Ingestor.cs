@@ -10,7 +10,7 @@ namespace Meteonel.Ingestor.Ingestors
         {
         }
 
-        protected override string QueueName => "ds18b20_persisted";
+        protected override string QueueName => "ds18b20";
         public override SensorType SensorType => SensorType.Ds18B20;
 
         protected override void PopulateReading(Ds18B20Message message, Ds18B20Reading reading)
